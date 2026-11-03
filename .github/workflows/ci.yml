@@ -14,12 +14,14 @@ on:
 
 jobs:
   quality-check:
-    name: Code Quality and Tests
+    name: Code Quality, Tests and SonarQube
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -39,3 +41,8 @@ jobs:
 
       - name: Run tests with coverage
         run: poetry run pytest
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
