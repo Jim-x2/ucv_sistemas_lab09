@@ -1,0 +1,41 @@
+
+name: CI - Travel Multiagent System
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - feature/lab09
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  quality-check:
+    name: Code Quality and Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-in-project: true
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Run Ruff
+        run: poetry run ruff check .
+
+      - name: Run tests with coverage
+        run: poetry run pytest
